@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiedy Stasik Zostanie Cwelem? | Odliczanie</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              emerald: '#10b981',
+              cyan: '#06b6d4',
+              accent: '#3b82f6',
+              dark: '#080c14',
+            }
+          },
+          animation: {
+            'pulse-glow': 'pulseGlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'floating 6s ease-in-out infinite',
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+              '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+            },
+            floating: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom subtle glassmorphism and background noise/grid */
+    body {
+      background-color: #070a12;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+    
+    .bg-grid-pattern {
+      background-size: 36px 36px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    .glass-card {
+      background: rgba(13, 19, 33, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px -10px rgba(16, 185, 129, 0.15);
+    }
+
+    .glass-inner-card {
+      background: rgba(18, 25, 42, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .neon-text-glow {
+      text-shadow: 0 0 20px rgba(16, 185, 129, 0.4), 0 0 40px rgba(6, 182, 212, 0.2);
+    }
+  </style>
+</head>
+<body class="min-h-screen relative flex flex-col justify-between selection:bg-emerald-500/30 selection:text-emerald-300 font-sans antialiased">
+
+  <!-- Tło: Subtelny canvas z cząsteczkami & siatka -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <canvas id="ambient-canvas" class="w-full h-full block"></canvas>
+    <div class="absolute inset-0 bg-grid-pattern opacity-60"></div>
+    <!-- Ambientne rozmyte światła w tle -->
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-emerald-500/15 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute -bottom-20 right-10 w-[450px] h-[300px] bg-cyan-600/15 rounded-full blur-[120px] pointer-events-none"></div>
+  </div>
+
+  <!-- Główna zawartość strony -->
+  <main class="relative z-10 flex-grow flex items-center justify-center p-4 sm:p-6 md:p-8">
+    <div class="w-full max-w-4xl mx-auto">
+      
+      <!-- Główny Kontener / Karta Glassmorphism -->
+      <div class="glass-card rounded-3xl p-6 sm:p-10 md:p-12 transition-all duration-300">
+        
+        <!-- Header: Etykieta operacyjna & Główny Nagłówek -->
+        <div class="text-center space-y-4 mb-8 sm:mb-10">
+          
+          <!-- Badge statusu "CEO / SZEF" -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-inner-card border border-emerald-500/30 text-emerald-400 text-xs sm:text-sm font-semibold tracking-wider uppercase animate-pulse">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981]"></span>
+            <span>Operacja: Nominacja na Cwela</span>
+            <span class="text-slate-500">•</span>
+            <span class="text-slate-300 font-mono" id="target-year-badge">202X</span>
+          </div>
+
+          <!-- Główny Tytuł z neonowym gradientem -->
+          <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-tight">
+            Za jaki czas <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent neon-text-glow">Stasik</span> stanie się cwelem?
+          </h1>
+
+          <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto font-normal">
+            Oficjalny czas pozostały do zamknięcia bieżącego cyklu roku oraz osiągnięcia szczytowego statusu.
+          </p>
+
+          <!-- Pasek bieżącego czasu i daty (Dokładność co do sekundy) -->
+          <div class="pt-2 flex items-center justify-center">
+            <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-slate-900/80 border border-slate-700/60 shadow-inner">
+              <svg class="w-4 h-4 text-emerald-400 animate-spin" style="animation-duration: 8s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <div class="text-xs sm:text-sm text-slate-300">
+                <span class="text-slate-400 font-medium">Bieżący czas:</span>
+                <span id="current-live-date" class="font-mono font-bold text-slate-100 ml-1">Ładowanie...</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Licznik Odliczający (Dni, Godziny, Minuty, Sekundy) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-10">
+          
+          <!-- DNI -->
+          <div class="glass-inner-card rounded-2xl p-4 sm:p-6 text-center border border-white/5 relative overflow-hidden group hover:border-emerald-500/40 transition-all duration-300">
+            <div class="absolute -top-10 -right-10 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl group-hover:bg-emerald-500/20 transition-all"></div>
+            <span id="countdown-days" class="block font-mono text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-none mb-2">00</span>
+            <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">Dni</span>
+          </div>
+
+          <!-- GODZINY -->
+          <div class="glass-inner-card rounded-2xl p-4 sm:p-6 text-center border border-white/5 relative overflow-hidden group hover:border-cyan-500/40 transition-all duration-300">
+            <div class="absolute -top-10 -right-10 w-20 h-20 bg-cyan-500/10 rounded-full blur-xl group-hover:bg-cyan-500/20 transition-all"></div>
+            <span id="countdown-hours" class="block font-mono text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-none mb-2">00</span>
+            <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">Godzin</span>
+          </div>
+
+          <!-- MINUTY -->
+          <div class="glass-inner-card rounded-2xl p-4 sm:p-6 text-center border border-white/5 relative overflow-hidden group hover:border-teal-500/40 transition-all duration-300">
+            <div class="absolute -top-10 -right-10 w-20 h-20 bg-teal-500/10 rounded-full blur-xl group-hover:bg-teal-500/20 transition-all"></div>
+            <span id="countdown-minutes" class="block font-mono text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-none mb-2">00</span>
+            <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">Minut</span>
+          </div>
+
+          <!-- SEKUNDY -->
+          <div class="glass-inner-card rounded-2xl p-4 sm:p-6 text-center border border-emerald-500/30 relative overflow-hidden group shadow-[0_0_20px_rgba(16,185,129,0.15)] bg-slate-900/70">
+            <div class="absolute -top-10 -right-10 w-20 h-20 bg-emerald-400/20 rounded-full blur-xl"></div>
+            <span id="countdown-seconds" class="block font-mono text-4xl sm:text-5xl md:text-6xl font-black text-emerald-400 tracking-tight leading-none mb-2 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">00</span>
+            <span class="text-[11px] sm:text-xs font-bold text-emerald-400/90 uppercase tracking-widest">Sekund</span>
+          </div>
+
+        </div>
+
+        <!-- Pasek postępu roku -->
+        <div class="mb-10 px-1">
+          <div class="flex justify-between items-center text-xs text-slate-400 font-mono mb-2">
+            <span>Postęp aktualnego roku:</span>
+            <span id="year-progress-percent" class="text-emerald-400 font-bold">0.00%</span>
+          </div>
+          <div class="w-full bg-slate-800/80 rounded-full h-2.5 overflow-hidden p-0.5 border border-slate-700/50">
+            <div id="year-progress-bar" class="h-full bg-gradient-to-r from-teal-500 to-emerald-400 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Sekcja Celów / Wymagań do Tytułu Szefa (Readonly / Nie do zaznaczania) -->
+        <div class="pt-6 border-t border-slate-800/90">
+          
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xs sm:text-sm font-semibold tracking-wider text-slate-400 uppercase flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+              </svg>
+              Warunki uzyskania statusu Cwela
+            </h2>
+            <span class="text-[11px] font-mono text-slate-500 bg-slate-900/60 px-2 py-0.5 rounded border border-slate-800">Tylko odczyt</span>
+          </div>
+
+          <!-- Lista wymagań: zablokowana do interakcji użytkownika (readonly/pointer-events-none) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 select-none pointer-events-none">
+            
+            <!-- Cel 1: ZAZNACZONE (FACEIT LVL 10) -->
+            <div class="flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/30 transition-all shadow-[0_0_15px_-3px_rgba(16,185,129,0.15)]">
+              <div class="flex items-center gap-3">
+                <!-- Zaznaczony Checkbox (Custom Stylizowany) -->
+                <div class="w-6 h-6 rounded-lg bg-emerald-500 flex items-center justify-center shadow-[0_0_10px_rgba(16,185,129,0.7)] text-slate-950 flex-shrink-0">
+                  <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <div>
+                  <span class="text-sm sm:text-base font-bold text-white tracking-wide block leading-tight">FACEIT LVL 10</span>
+                  <span class="text-[11px] text-emerald-400 font-medium">Ukończone • 2000+ Elo zdobyte</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono font-bold tracking-wider text-emerald-300 bg-emerald-500/20 px-2 py-1 rounded-md border border-emerald-500/40 uppercase">
+                Zaliczono
+              </span>
+            </div>
+
+            <!-- Cel 2: ODZNACZONE (PRAWO JAZDY) -->
+            <div class="flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-slate-900/40 border border-slate-800/80 transition-all opacity-85">
+              <div class="flex items-center gap-3">
+                <!-- Odznaczony Checkbox (Pusty / Nieaktywny) -->
+                <div class="w-6 h-6 rounded-lg border-2 border-slate-600 bg-slate-800/60 flex items-center justify-center flex-shrink-0">
+                  <!-- Puste wnętrze oznaczające brak zaznaczenia -->
+                </div>
+                <div>
+                  <span class="text-sm sm:text-base font-semibold text-slate-300 tracking-wide block leading-tight">PRAWO JAZDY</span>
+                  <span class="text-[11px] text-slate-500 font-medium">Oczekuje na realizację • W toku</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono font-bold tracking-wider text-amber-400/90 bg-amber-500/10 px-2 py-1 rounded-md border border-amber-500/20 uppercase">
+                W trakcie
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Stopka / Podpis -->
+      <footer class="mt-6 text-center text-xs text-slate-500 font-medium">
+        Projekt dedykowany dla Stasika • Cel ostateczny: Cwel Roku <span id="footer-year"></span>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- Skrypt Logiki Odliczania i Czasu -->
+  <script>
+    (function initBossCountdown() {
+      // Elementy DOM
+      const daysEl = document.getElementById('countdown-days');
+      const hoursEl = document.getElementById('countdown-hours');
+      const minutesEl = document.getElementById('countdown-minutes');
+      const secondsEl = document.getElementById('countdown-seconds');
+      const liveDateEl = document.getElementById('current-live-date');
+      const yearBadgeEl = document.getElementById('target-year-badge');
+      const footerYearEl = document.getElementById('footer-year');
+      const progressBarEl = document.getElementById('year-progress-bar');
+      const progressPercentEl = document.getElementById('year-progress-percent');
+
+      // Funkcja formatująca dwucyfrowo liczby (np. 7 -> "07")
+      function pad(num) {
+        return String(num).padStart(2, '0');
+      }
+
+      // Funkcja aktualizująca odliczanie i zegar
+      function updateTimer() {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+
+        // Ustawienie etykiety roku
+        if (yearBadgeEl) yearBadgeEl.textContent = currentYear;
+        if (footerYearEl) footerYearEl.textContent = currentYear;
+
+        // 1. Formatowanie bieżącej daty i dokładnego czasu (co do sekundy) w języku polskim
+        const dateOptions = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        };
+        const dateStr = now.toLocaleDateString('pl-PL', dateOptions);
+        const timeStr = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+        
+        // Kapitalizujemy pierwszą literę dnia tygodnia
+        const formattedFullDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1) + ', ' + timeStr;
+        if (liveDateEl) {
+          liveDateEl.textContent = formattedFullDate;
+        }
+
+        // 2. Docelowy moment: Koniec roku (31 grudnia, 23:59:59)
+        const targetDate = new Date(currentYear, 11, 31, 23, 59, 59, 999);
+        let timeRemaining = targetDate.getTime() - now.getTime();
+
+        // Obsługa zakończenia roku (gdyby minęła północ)
+        if (timeRemaining <= 0) {
+          if (daysEl) daysEl.textContent = '00';
+          if (hoursEl) hoursEl.textContent = '00';
+          if (minutesEl) minutesEl.textContent = '00';
+          if (secondsEl) secondsEl.textContent = '00';
+          if (progressBarEl) progressBarEl.style.width = '100%';
+          if (progressPercentEl) progressPercentEl.textContent = '100.00%';
+          return;
+        }
+
+        // Obliczenia Dni, Godzin, Minut, Sekund
+        const totalSeconds = Math.floor(timeRemaining / 1000);
+        const days = Math.floor(totalSeconds / (3600 * 24));
+        const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+
+        if (daysEl) daysEl.textContent = pad(days);
+        if (hoursEl) hoursEl.textContent = pad(hours);
+        if (minutesEl) minutesEl.textContent = pad(minutes);
+        if (secondsEl) secondsEl.textContent = pad(seconds);
+
+        // 3. Obliczenie postępu bieżącego roku (od 1 stycznia 00:00:00 do 31 grudnia 23:59:59)
+        const startOfYear = new Date(currentYear, 0, 1, 0, 0, 0, 0);
+        const totalYearDuration = targetDate.getTime() - startOfYear.getTime();
+        const yearElapsed = now.getTime() - startOfYear.getTime();
+        const yearPercent = Math.min(100, Math.max(0, (yearElapsed / totalYearDuration) * 100));
+
+        if (progressBarEl) progressBarEl.style.width = yearPercent.toFixed(2) + '%';
+        if (progressPercentEl) progressPercentEl.textContent = yearPercent.toFixed(2) + '%';
+      }
+
+      // Natychmiastowe uruchomienie i cykliczny interwał co 1000ms
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    })();
+
+    // Animowane cząsteczki w tle (HTML5 Canvas dla gamingowo-eleganckiego efektu głębi)
+    (function initBackgroundCanvas() {
+      const canvas = document.getElementById('ambient-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      const particles = [];
+      const particleCount = 45;
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 1.6 + 0.4,
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          color: Math.random() > 0.5 ? 'rgba(16, 185, 129, ' : 'rgba(6, 182, 212, ',
+          alpha: Math.random() * 0.5 + 0.1
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color + p.alpha + ')';
+          ctx.fill();
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      window.onload = function() {
+        animate();
+      };
+    })();
+  </script>
+</body>
+</html>
